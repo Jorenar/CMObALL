@@ -54,16 +54,6 @@
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, \
         1, 1, 1, 1, \
         0)
-
-#define CMOBALL_HAS_NO_COMMA(...) CMOBALL_ARG64_N(__VA_ARGS__, \
-        0  0, 0, 0, 0, 0, 0, 0, 0, 0, \
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
-        0, 0, 0, 0, \
-        1)
 /* *INDENT-ON* */
 
 #define CMOBALL_TRIGGER_PARENTHESES(...) ,
@@ -80,10 +70,14 @@
         CMOBALL_HAS_COMMA(CMOBALL_TRIGGER_PARENTHESES __VA_ARGS__ (~)) \
     )
 
+#define CMOBALL_NOT_0 1
+#define CMOBALL_NOT_1 0
+#define CMOBALL_NOT(x) CMOBALL_OVR(CMOBALL_NOT, x)
+
 #define CMOBALL_PASTE5(_0, _1, _2, _3, _4) _0 ## _1 ## _2 ## _3 ## _4
-#define CMOBALL_IS_EMPTY_0001 ,
+#define CMOBALL_ISEMPTY_0001 ,
 #define CMOBALL__HAS_0_OR_1_ARGS(_0, _1, _2, _3) \
-    CMOBALL_HAS_NO_COMMA(CMOBALL_PASTE5(CMOBALL_IS_EMPTY_, _0, _1, _2, _3))
+    CMOBALL_NOT(CMOBALL_HAS_COMMA(CMOBALL_PASTE5(CMOBALL_ISEMPTY_, _0, _1, _2, _3)))
 
 #define CMOBALL_NUM_ARGS(...) CMOBALL__NUM_ARGS(__VA_ARGS__, CMOBALL_RSEQ_N(__VA_ARGS__) )
 #define CMOBALL__NUM_ARGS(...) CMOBALL_ARG64_N(__VA_ARGS__)
