@@ -38,10 +38,6 @@ int main()
     printf("%d\n", foo(1));     // 5
     printf("%d\n", foo(1,1,1)); // 3
 
-    printf("%d\n", bar(4,0));   // 2
-    printf("%d\n", bar(4,1,1)); // 3
-    // printf("%d\n", bar(1));  // error
-
     return 0;
 }
 ```
