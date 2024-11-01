@@ -22,6 +22,12 @@
  *
  */
 
+/* Resources:
+ *   https://gustedt.wordpress.com/2010/06/08/detect-empty-macro-arguments
+ *   https://stackoverflow.com/a/30566098/10247460
+ *   https://reddit.com/r/C_Programming/comments/mds9sm/deleted_by_user/gsbbkfk
+ */
+
 #ifndef CMOBALL_H_
 #define CMOBALL_H_
 
