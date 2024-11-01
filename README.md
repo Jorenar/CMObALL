@@ -6,6 +6,8 @@ number of passed arguments.
 
 May be used for providing **default argument values for functions**.
 
+Should work in C99, might work in C89 with some compiler extensions.
+
 # Usage
 
 Choose `prefix` for overloading (may be the same as `macro`), then define:
