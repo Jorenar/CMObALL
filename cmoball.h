@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright 2021,2024 Jorenar <dev@jorenar.com>
+ * Copyright 2021,2024-2025 Jorenar <dev@jorenar.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,7 +24,7 @@
 
 /* Resources:
  *   https://gustedt.wordpress.com/2010/06/08/detect-empty-macro-arguments
- *   https://stackoverflow.com/a/30566098/10247460
+ *   https://stackoverflow.com/a/30566098
  *   https://reddit.com/r/C_Programming/comments/mds9sm/deleted_by_user/gsbbkfk
  */
 
@@ -36,7 +36,6 @@
 #define CMOBALL_OVR(name, num)   CMOBALL__OVR(name, num)
 #define CMOBALL__OVR(name, num)  name ## _ ## num
 
-/* *INDENT-OFF* */
 #define CMOBALL_ARG_N( \
          _0,  _1,  _2,  _3,  _4,  _5,  _6,  _7,  _8,  _9, \
         _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, \
@@ -47,20 +46,50 @@
         _60, _61, _62, _63, \
         N, ...)  N
 
-#define CMOBALL_RSEQ_N \
+#define CMOBALL_HAS_COMMA(...)    CMOBALL_ARG_N(__VA_ARGS__, \
+        1  1, 1, 1, 1, 1, 1, 1, 1, 1, \
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, \
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, \
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, \
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, \
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, \
+        1, 1, 1, 1, \
+        0)
+
+#define CMOBALL_TRIGGER_PARENTHESES(...) ,
+
+#define CMOBALL_HAS_0_OR_1_ARGS(...) \
+    CMOBALL__HAS_0_OR_1_ARGS( \
+        /* test if one argument, eventually an empty one */ \
+        CMOBALL_HAS_COMMA(__VA_ARGS__), \
+        /* test if TRIGGER_PARENTHESES with the argument adds a comma */ \
+        CMOBALL_HAS_COMMA(CMOBALL_TRIGGER_PARENTHESES __VA_ARGS__), \
+        /* test if the argument with a parentheses adds a comma */ \
+        CMOBALL_HAS_COMMA(__VA_ARGS__ (~)), \
+        /* test if placing it between TRIGGER_PARENTHESES and the parentheses adds a comma */ \
+        CMOBALL_HAS_COMMA(CMOBALL_TRIGGER_PARENTHESES __VA_ARGS__ (~)) \
+    )
+
+#define CMOBALL_NOT_0 1
+#define CMOBALL_NOT_1 0
+#define CMOBALL_NOT(x) CMOBALL_OVR(CMOBALL_NOT, x)
+
+#define CMOBALL_PASTE5(_0, _1, _2, _3, _4) _0 ## _1 ## _2 ## _3 ## _4
+#define CMOBALL_ISEMPTY_0001 ,
+#define CMOBALL__HAS_0_OR_1_ARGS(_0, _1, _2, _3) \
+    CMOBALL_NOT(CMOBALL_HAS_COMMA(CMOBALL_PASTE5(CMOBALL_ISEMPTY_, _0, _1, _2, _3)))
+
+#define CMOBALL_NUM_ARGS(...) CMOBALL__NUM_ARGS(__VA_ARGS__, CMOBALL_RSEQ_N(__VA_ARGS__) )
+#define CMOBALL__NUM_ARGS(...) CMOBALL_ARG_N(__VA_ARGS__)
+
+#define CMOBALL_RSEQ_N(...) \
                         64, 63, 62, 61, 60, \
     59, 58, 57, 56, 55, 54, 53, 52, 51, 50, \
     49, 48, 47, 46, 45, 44, 43, 42, 41, 40, \
     39, 38, 37, 36, 35, 34, 33, 32, 31, 30, \
     29, 28, 27, 26, 25, 24, 23, 22, 21, 20, \
     19, 18, 17, 16, 15, 14, 13, 12, 11, 10, \
-     9,  8,  7,  6,  5,  4,  3,  2,  1,  0
-/* *INDENT-ON* */
-
-#define CMOBALL_DETECT_0_ARGS(...) CMOBALL__DETECT_0 ## __VA_ARGS__ ## _
-#define CMOBALL__DETECT_0_ ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0
-
-#define CMOBALL__NUM_ARGS(ARGS) CMOBALL_ARG_N ARGS
-#define CMOBALL_NUM_ARGS(...) CMOBALL__NUM_ARGS((CMOBALL_DETECT_0_ARGS(__VA_ARGS__), CMOBALL_RSEQ_N))
+     9,  8,  7,  6,  5,  4,  3,  2,         \
+    CMOBALL_HAS_0_OR_1_ARGS(__VA_ARGS__),   0
 
 #endif /* CMOBALL_H_ */
